@@ -1,4 +1,6 @@
 import Commands.Command;
+import Commands.CreateReport;
+import Commands.GetReports;
 import com.rabbitmq.client.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,7 +13,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeoutException;
 
 public class ReportsService {
-	private static final String RPC_QUEUE_NAME = "restaurants-request";
+	private static final String RPC_QUEUE_NAME = "report-request";
 
 	public static void main(String[] argv) {
 
@@ -43,29 +45,29 @@ public class ReportsService {
 						JSONParser parser = new JSONParser();
 						JSONObject messageBody = (JSONObject) parser.parse(message);
 						String command = (String) messageBody.get("command");
-                        Command cmd = (Command) Class.forName("commands."+getCommand(message)).newInstance();
-                        HashMap<String, Object> props = new HashMap<String, Object>();
-                        props.put("channel", channel);
-                        props.put("properties", properties);
-                        props.put("replyProps", replyProps);
-                        props.put("envelope", envelope);
-                        props.put("body", message);
+						Command cmd = null;
+						System.out.println(command);
+						switch (command) {
+						case "CreateReport":
+							cmd = new CreateReport();
+							break;
+						case "RetrieveReport":
+							cmd = new GetReports();
+							break;
+						}
 
-                        cmd.init(props);
-                        executor.submit(cmd);
-                        
+						HashMap<String, Object> props = new HashMap<String, Object>();
+						props.put("channel", channel);
+						props.put("properties", properties);
+						props.put("replyProps", replyProps);
+						props.put("envelope", envelope);
+						props.put("body", message);
+
+						cmd.init(props);
+						executor.submit(cmd);
 					} catch (RuntimeException e) {
 						System.out.println(" [.] " + e.toString());
 					} catch (ParseException e) {
-						e.printStackTrace();
-					} catch (InstantiationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} finally {
 						synchronized (this) {
