@@ -7,4 +7,3 @@ POST,/report/updateThreadPoolCount/,UpdateThreadPoolCount
 POST,/report/updateDBPoolCount/,UpdateDBPoolCount
 GET,/report/freeze/,FreezeQueue
 GET,/report/resume/,ResumeQueue
-POST,/report,Test
