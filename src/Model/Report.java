@@ -37,7 +37,7 @@ public class Report {
 	}
 	private static MongoCollection<Document> collection = null;
 
-	public static HashMap<String, Object> create(HashMap<String, Object> atrributes,String username) {
+	public static HashMap<String, Object> create(HashMap<String, Object> atrributes,String username) throws ParseException {
 
 		MongoClientOptions.Builder options = MongoClientOptions.builder()
 	            .connectionsPerHost(DbPoolCount);
@@ -56,7 +56,9 @@ public class Report {
 		newReport.append("reported_username", username);
 		collection.insertOne(newReport);
 
-		return atrributes;
+		JSONParser parser = new JSONParser();
+		HashMap<String, Object> returnValue = Command.jsonToMap((JSONObject) parser.parse(newReport.toJson()));
+		return returnValue;
 	}
 	public static ArrayList<HashMap<String, Object>> get(String username) {
 		MongoClientOptions.Builder options = MongoClientOptions.builder()
