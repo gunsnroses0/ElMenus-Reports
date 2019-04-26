@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 public class ReportsService {
 	private static String RPC_QUEUE_NAME = "report-request";
-	static int threadPoolCount=4;
+	private static int threadPoolCount=4;
 	public static HashMap<String, String> config;
 	public static String getRPC_QUEUE_NAME() {
 		return RPC_QUEUE_NAME;
