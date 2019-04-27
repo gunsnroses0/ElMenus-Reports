@@ -41,6 +41,7 @@ public class ReportsService {
 
 	public static void main(String[] argv) {
 		run();
+		ServiceController.run();
 	}
 
 	public static void run() {
