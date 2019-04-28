@@ -38,13 +38,20 @@ public class Report {
 	}
 	private static MongoCollection<Document> collection = null;
 
+	static MongoClientOptions.Builder options = null;
+	static MongoClientURI uri = null;
+	static MongoClient mongoClient = null; 
+	
+	public static void initializeDb() {
+		options = MongoClientOptions.builder()
+				.connectionsPerHost(DbPoolCount);
+		uri = new MongoClientURI(
+				host,options);
+		mongoClient = new MongoClient(uri);
+			
+	}
 	public static HashMap<String, Object> create(HashMap<String, Object> atrributes,String username) throws ParseException {
 
-		MongoClientOptions.Builder options = MongoClientOptions.builder()
-	            .connectionsPerHost(DbPoolCount);
-		MongoClientURI uri = new MongoClientURI(
-				host,options);
-		MongoClient mongoClient = new MongoClient(uri);
 		MongoDatabase database = mongoClient.getDatabase("El-Menus");
 
 		// Retrieving a collection
@@ -62,11 +69,7 @@ public class Report {
 		return returnValue;
 	}
 	public static ArrayList<HashMap<String, Object>> get(String username) {
-		MongoClientOptions.Builder options = MongoClientOptions.builder()
-	            .connectionsPerHost(DbPoolCount);
-		MongoClientURI uri = new MongoClientURI(
-				host,options);
-		MongoClient mongoClient = new MongoClient(uri);
+
 		MongoDatabase database = mongoClient.getDatabase("El-Menus");
 
 		// Retrieving a collection
@@ -89,8 +92,7 @@ public class Report {
 				e.printStackTrace();
 			}
 		}
-		
-		mongoClient.close();
+
         return reports;
 		
 	}

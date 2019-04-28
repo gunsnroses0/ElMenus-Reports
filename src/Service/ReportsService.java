@@ -2,6 +2,8 @@ package Service;
 import Commands.Command;
 import Commands.CreateReport;
 import Commands.GetReports;
+import Model.Report;
+
 import com.rabbitmq.client.*;
 
 import org.apache.commons.lang.StringUtils;
@@ -42,6 +44,7 @@ public class ReportsService {
 	public static void main(String[] argv) {
 		run();
 		ServiceController.run();
+		Report.initializeDb();
 	}
 
 	public static void run() {
